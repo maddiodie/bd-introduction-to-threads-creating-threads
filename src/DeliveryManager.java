@@ -2,7 +2,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeliveryManager {
+import static java.lang.Thread.sleep;
+
+public class DeliveryManager implements Runnable {
 
     public List<WarehousePackage> incomingPackages;
     public List<WarehousePackage> additionalProcessing;
@@ -13,7 +15,7 @@ public class DeliveryManager {
      */
     public DeliveryManager(List<WarehousePackage> packages) {
         incomingPackages = packages;
-        additionalProcessing = new ArrayList<WarehousePackage>();
+        additionalProcessing = new ArrayList<>();
     }
 
     /**
@@ -22,13 +24,19 @@ public class DeliveryManager {
     public void run() {
         System.out.println("DeliveryManager thread started.");
 
+        sortShipment();
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        printInventory();
     }
 
     /**
      * Sorts out packages for additional processing.
      */
     public void sortShipment() {
-
         // Add marked packages.
         for (WarehousePackage p : incomingPackages) {
             if (p.isAdditionalProcessing()) {
@@ -54,4 +62,5 @@ public class DeliveryManager {
             p.packageInfo();
         }
     }
+
 }
